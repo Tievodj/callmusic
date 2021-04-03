@@ -8,7 +8,7 @@ import callsmusic
 import converter
 from downloaders import youtube
 
-from config import DURATION_LIMIT, CHAT_ID
+from config import DURATION_LIMIT
 from helpers.filters import command, other_filters
 from helpers.decorators import errors
 from helpers.errors import DurationLimitError
@@ -40,5 +40,5 @@ async def play(_, message: Message):
     if message.chat.id in callsmusic.pytgcalls.active_calls:
         await message.reply_text(f"Queued at position {await callsmusic.queues.put(message.chat.id, file_path=file_path)}!")
     else:
-        callsmusic.pytgcalls.join_group_call({CHAT_ID}, file_path)
-        await message.reply_text("Playing...aaa")
+        callsmusic.pytgcalls.join_group_call(message.chat.id, file_path)
+        await message.reply_text(message.chat.id)
