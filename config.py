@@ -16,4 +16,4 @@ COMMAND_PREFIXES = list(getenv("COMMAND_PREFIXES", "/ !").split())
 
 SUDO_USERS = list(map(int, getenv("SUDO_USERS").split()))
 
-CHAT_ID = getenv("CHAT_ID")
+CHAT_ID = int(getenv("CHAT_ID"))
