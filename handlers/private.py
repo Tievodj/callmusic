@@ -6,7 +6,7 @@ from helpers.decorators import errors, authorized_users_only
 from helpers.errors import DurationLimitError
 from helpers.gets import get_url, get_file_name
 
-from os import path
+import os
 
 from asyncio.queues import QueueEmpty
 
@@ -16,19 +16,6 @@ import converter
 from downloaders import youtube
 
 from config import DURATION_LIMIT, CHAT_ID
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @Client.on_message(command("play") & other_filters2)
@@ -41,13 +28,13 @@ async def play(_, message: Message):
     if audio:
         if round(audio.duration / 60) > DURATION_LIMIT:
             raise DurationLimitError(
-                f"Videos longer than {DURATION_LIMIT} minute(s) aren't allowed, the provided video is {audio.duration / 60} minute(s)"
+                f"Videos mas largos que {DURATION_LIMIT} no están permitidos, la duración del video dado es {audio.duration / 60} minutos"
             )
 
         file_name = get_file_name(audio)
         file_path = await converter.convert(
             (await message.reply_to_message.download(file_name))
-            if not path.isfile(path.join("downloads", file_name)) else file_name
+            if not os.path.isfile(os.path.join("downloads", file_name)) else file_name
         )
     elif url:
         file_path = await converter.convert(youtube.download(url))
@@ -55,14 +42,28 @@ async def play(_, message: Message):
         return await message.reply_text("You did not give me anything to play!")
 
     if CHAT_ID in callsmusic.pytgcalls.active_calls:
-        await message.reply_text(f"Queued at position {await callsmusic.queues.put(CHAT_ID, file_path=file_path)}!")
+        await message.reply_text(f"Encolado en la posición {await callsmusic.queues.put(CHAT_ID, file_path=file_path)}!")
+        print("iteam agregado a la cola")
     else:
         callsmusic.pytgcalls.join_group_call(CHAT_ID, file_path)
-        await message.reply_text("Playing...")
+        await message.reply_text("Reproduciendo...")
+        print("Reproduccion Iniciada")
 
 
 
-
+@Client.on_message(command("clean") & other_filters2)
+@errors
+@authorized_users_only
+async def clean(client, message: Message):
+    download_dir = os.path.join(client.workdir, "downloads/")
+    all_fn = os.listdir(download_dir)
+    count = 0
+    if all_fn:
+        for fn in all_fn:
+            count += 1
+            os.remove(os.path.join(download_dir, fn))
+    await message.reply_text("eliminados " + {count} + " archivos")
+    print("eliminados " + {count} + " archivos")
 
 @Client.on_message(command("pause") & other_filters2)
 @errors
@@ -73,10 +74,10 @@ async def pause(_, message: Message):
     ) or (
             callsmusic.pytgcalls.active_calls[CHAT_ID] == 'paused'
     ):
-        await message.reply_text("Nothing is playing!")
+        await message.reply_text("No se está reproduciendo nada!")
     else:
         callsmusic.pytgcalls.pause_stream(CHAT_ID)
-        await message.reply_text("Paused!")
+        await message.reply_text("Pausado!")
 
 
 @Client.on_message(command("resume") & other_filters2)
@@ -88,10 +89,10 @@ async def resume(_, message: Message):
     ) or (
             callsmusic.pytgcalls.active_calls[CHAT_ID] == 'playing'
     ):
-        await message.reply_text("Nothing is paused!")
+        await message.reply_text("No hay nada pausado!")
     else:
         callsmusic.pytgcalls.resume_stream(CHAT_ID)
-        await message.reply_text("Resumed!")
+        await message.reply_text("Resumido!")
 
 
 @Client.on_message(command("stop") & other_filters2)
@@ -99,7 +100,7 @@ async def resume(_, message: Message):
 @authorized_users_only
 async def stop(_, message: Message):
     if CHAT_ID not in callsmusic.pytgcalls.active_calls:
-        await message.reply_text("Nothing is streaming!")
+        await message.reply_text("No se está transmitiendo!")
     else:
         try:
             callsmusic.queues.clear(CHAT_ID)
@@ -107,7 +108,7 @@ async def stop(_, message: Message):
             pass
 
         callsmusic.pytgcalls.leave_group_call(CHAT_ID)
-        await message.reply_text("Stopped streaming!")
+        await message.reply_text("Streaming detenido!")
 
 
 @Client.on_message(command("skip") & other_filters2)
@@ -115,7 +116,7 @@ async def stop(_, message: Message):
 @authorized_users_only
 async def skip(_, message: Message):
     if CHAT_ID not in callsmusic.pytgcalls.active_calls:
-        await message.reply_text("Nothing is playing to skip!")
+        await message.reply_text("No hay nada en la cola!")
     else:
         callsmusic.queues.task_done(CHAT_ID)
 
@@ -127,4 +128,12 @@ async def skip(_, message: Message):
                 callsmusic.queues.get(CHAT_ID)["file_path"]
             )
 
-        await message.reply_text("Skipped the current song!")
+        await message.reply_text("Saltado al siguiente item!")
+
+
+@Client.on_message(command("kill") & other_filters2)
+@errors
+@authorized_users_only
+async def killbot(_, message):
+    await message.reply_text("__**Reiniciando Dyno!__**")
+    quit()
