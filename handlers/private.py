@@ -55,7 +55,7 @@ async def play(_, message: Message):
 @errors
 @authorized_users_only
 async def clean(client, message: Message):
-    download_dir = os.path.join(client.workdir, "downloads/")
+    download_dir = os.path.join(client.workdir, "downloads")
     all_fn = os.listdir(download_dir)
     count = 0
     if all_fn:
