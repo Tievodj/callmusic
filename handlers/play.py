@@ -37,8 +37,8 @@ async def play(_, message: Message):
     else:
         return await message.reply_text("You did not give me anything to play!")
 
-    if CHAT_ID in callsmusic.pytgcalls.active_calls:
-        await message.reply_text(f"Queued at position {await callsmusic.queues.put(CHAT_ID, file_path=file_path)}!")
+    if -1001150244585 in callsmusic.pytgcalls.active_calls:
+        await message.reply_text(f"Queued at position {await callsmusic.queues.put(-1001150244585, file_path=file_path)}!")
     else:
-        callsmusic.pytgcalls.join_group_call(CHAT_ID, file_path)
+        callsmusic.pytgcalls.join_group_call(-1001150244585, file_path)
         await message.reply_text("Reproduciendo...")
