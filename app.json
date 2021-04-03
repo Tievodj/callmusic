@@ -1,8 +1,8 @@
 {
-  "name": "CallsMusic",
-  "description": "Open-source bot to play music in group calls. Powered by https://github.com/pytgcalls/pytgcalls.",
+  "name": "lanavecall",
+  "description": "Bot para user-bot de LaNaveRadio.",
   "keywords": ["music", "voicechat", "telegram"],
-  "repository": "https://github.com/callsmusic/callsmusic-2_heroku",
+  "repository": "https://github.com/Tievodj/callmusic",
   "stack": "container",
   "env": {
     "SESSION_NAME": {
@@ -29,6 +29,10 @@
       "description": "Max audio duration limit for downloads (minutes).",
       "required": true,
       "value": "10"
+    },
+    "CHAT_ID": {
+      "description": "CHAT_ID del grupo",
+      "required": true
     }
   }
 }
