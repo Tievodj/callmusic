@@ -20,11 +20,6 @@ from config import DURATION_LIMIT, CHAT_ID
 
 
 
-
-
-
-
-
 @Client.on_message(command("play") & other_filters2)
 @errors
 async def play(_, message: Message):
