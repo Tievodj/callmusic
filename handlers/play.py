@@ -41,4 +41,4 @@ async def play(_, message: Message):
         await message.reply_text(f"Queued at position {await callsmusic.queues.put(message.chat.id, file_path=file_path)}!")
     else:
         callsmusic.pytgcalls.join_group_call({CHAT_ID}, file_path)
-        await message.reply_text("Playing...")
+        await message.reply_text("Playing...aaa")
