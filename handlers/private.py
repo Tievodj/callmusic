@@ -39,7 +39,7 @@ async def play(_, message: Message):
     elif url:
         file_path = await converter.convert(youtube.download(url))
     else:
-        return await message.reply_text("You did not give me anything to play!")
+        return await message.reply_text("No hay nada para reproducir")
 
     if CHAT_ID in callsmusic.pytgcalls.active_calls:
         await message.reply_text(f"Encolado en la posición {await callsmusic.queues.put(CHAT_ID, file_path=file_path)}!")
