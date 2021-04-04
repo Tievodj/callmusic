@@ -55,13 +55,12 @@ async def play(_, message: Message):
 @errors
 @authorized_users_only
 async def clean(client, message: Message):
-    download_dir = "downloads"
-    all_fn = os.listdir(download_dir)
+    folder = "/downloads"
     count = 0
-    if all_fn:
-        for fn in all_fn:
-            count += 1
-            os.remove(os.path.join(download_dir, fn))
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        os.unlink(file_path)
+        count += 1
     await message.reply_text("eliminados " + {count} + " archivos")
     print("eliminados " + {count} + " archivos")
 
