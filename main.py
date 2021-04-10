@@ -14,4 +14,4 @@ bot = Bot(
 
 bot.start()
 run()
-print('>>> SISTEMA EN LINEA')
+print('>>> SISTEMA EN LINEA ')
