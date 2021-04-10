@@ -24,6 +24,7 @@ async def convert(file_path: str) -> str:
     await proc.communicate()
 
     if proc.returncode != 0:
+        print("Error con FFmpeg")
         raise FFmpegReturnCodeError("FFmpeg did not return 0")
 
     return out

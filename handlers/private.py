@@ -136,3 +136,10 @@ async def skip(_, message: Message):
 async def killbot(_, message):
     await message.reply_text("__**Reiniciando Dyno!__**")
     quit()
+
+
+@Client.on_message(command("id") & other_filters2)
+@errors
+@authorized_users_only
+async def id(_, message):
+    await message.reply_text(CHAT_ID)
