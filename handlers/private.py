@@ -55,7 +55,7 @@ async def play(_, message: Message):
 @errors
 @authorized_users_only
 async def clean(client, message: Message):
-    folder = "/downloads"
+    folder = "raw_files"
     count = 0
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
